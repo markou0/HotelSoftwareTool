@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 25 ????. 2016 3:50:37 by Hibernate Tools 5.2.0.Beta1 -->
+<hibernate-mapping>
+    <class name="com.markkryzh.hotel_software_tool.model.ServiceBooking" table="service_booking" schema="public" optimistic-lock="version">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="service" class="com.markkryzh.hotel_software_tool.model.Service" fetch="select">
+            <column name="service_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="user" class="com.markkryzh.hotel_software_tool.model.User" fetch="select">
+            <column name="user_id" not-null="true" />
+        </many-to-one>
+        <property name="atDate" type="date">
+            <column name="at_date" length="13" not-null="true" />
+        </property>
+        <property name="atTime" type="time">
+            <column name="at_time" length="15" not-null="true" />
+        </property>
+        <property name="price" type="double">
+            <column name="price" precision="17" scale="17" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

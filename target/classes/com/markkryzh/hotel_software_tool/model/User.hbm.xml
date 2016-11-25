@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 25 ????. 2016 3:50:37 by Hibernate Tools 5.2.0.Beta1 -->
+<hibernate-mapping>
+    <class name="com.markkryzh.hotel_software_tool.model.User" table="user" schema="public" optimistic-lock="version">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <property name="email" type="string">
+            <column name="email" not-null="true" unique="true" />
+        </property>
+        <property name="password" type="string">
+            <column name="password" not-null="true" />
+        </property>
+        <property name="phone" type="string">
+            <column name="phone" not-null="true" />
+        </property>
+        <property name="name" type="string">
+            <column name="name" not-null="true" />
+        </property>
+        <property name="surname" type="string">
+            <column name="surname" not-null="true" />
+        </property>
+        <property name="role" type="string">
+            <column name="role" not-null="true" />
+        </property>
+        <property name="enabled" type="short">
+            <column name="enabled" not-null="true" />
+        </property>
+        <set name="roomBookings" table="room_booking" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="user_id" not-null="true" />
+            </key>
+            <one-to-many class="com.markkryzh.hotel_software_tool.model.RoomBooking" />
+        </set>
+        <set name="serviceBookings" table="service_booking" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="user_id" not-null="true" />
+            </key>
+            <one-to-many class="com.markkryzh.hotel_software_tool.model.ServiceBooking" />
+        </set>
+    </class>
+</hibernate-mapping>

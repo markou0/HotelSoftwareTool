@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 25 ????. 2016 3:50:37 by Hibernate Tools 5.2.0.Beta1 -->
+<hibernate-mapping>
+    <class name="com.markkryzh.hotel_software_tool.model.RoomType" table="room_type" schema="public" optimistic-lock="version">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="assigned" />
+        </id>
+        <property name="name" type="string">
+            <column name="name" not-null="true" unique="true" />
+        </property>
+        <set name="rooms" table="room" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="room_type_id" not-null="true" />
+            </key>
+            <one-to-many class="com.markkryzh.hotel_software_tool.model.Room" />
+        </set>
+    </class>
+</hibernate-mapping>
