@@ -9,9 +9,10 @@ import java.util.Set;
  */
 public class User implements java.io.Serializable {
 
-	private int id;
+	private Integer id;
 	private String email;
 	private String password;
+	private String confPassword;
 	private String phone;
 	private String name;
 	private String surname;
@@ -23,7 +24,7 @@ public class User implements java.io.Serializable {
 	public User() {
 	}
 
-	public User(int id, String email, String password, String phone, String name, String surname, String role,
+	public User(Integer id, String email, String password, String phone, String name, String surname, String role,
 			short enabled) {
 		this.id = id;
 		this.email = email;
@@ -35,7 +36,7 @@ public class User implements java.io.Serializable {
 		this.enabled = enabled;
 	}
 
-	public User(int id, String email, String password, String phone, String name, String surname, String role,
+	public User(Integer id, String email, String password, String phone, String name, String surname, String role,
 			short enabled, Set roomBookings, Set serviceBookings) {
 		this.id = id;
 		this.email = email;
@@ -49,11 +50,11 @@ public class User implements java.io.Serializable {
 		this.serviceBookings = serviceBookings;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -127,6 +128,14 @@ public class User implements java.io.Serializable {
 
 	public void setServiceBookings(Set serviceBookings) {
 		this.serviceBookings = serviceBookings;
+	}
+
+	public String getConfPassword() {
+		return confPassword;
+	}
+
+	public void setConfPassword(String confPassword) {
+		this.confPassword = confPassword;
 	}
 
 }

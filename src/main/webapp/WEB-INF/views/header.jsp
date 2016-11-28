@@ -3,6 +3,9 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page session="true"%>
 <spring:url value="/resources/css/style.css" var="mainCss" />
 <html>
@@ -49,20 +52,25 @@
 								class="glyphicon glyphicon-home"></span> <span class="sr-only">(current)</span></a></li>
 						<li><a href="rooms">Rooms</a></li>
 						<li><a href="services">Services</a></li>
-						<li><a href="#">Bookings</a></li>
+						<li><a href="roomBookings">Room Bookings</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="#">Login</a></li>
-						<li><a href="#">Sign up</a></li>
-						<li class="dropdown"><a href="#" class="dropdown-toggle"
-							data-toggle="dropdown" role="button" aria-haspopup="true"
-							aria-expanded="false">Acount <span class="caret"></span></a>
-							<ul class="dropdown-menu">
-								<li><a href="#">My page</a></li>
-								<li><a href="#">Admin Tools</a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="#">Logout</a></li>
-							</ul></li>
+						<c:choose>
+							<c:when test="${empty pageContext.request.userPrincipal}">
+								<li><a href="login">Login</a></li>
+							</c:when>
+							<c:otherwise>
+								<li class="dropdown"><a href="#" class="dropdown-toggle"
+									data-toggle="dropdown" role="button" aria-haspopup="true"
+									aria-expanded="false">${pageContext.request.userPrincipal.name}<span class="caret"></span></a>
+									<ul class="dropdown-menu">
+										<li><a href="#">My page</a></li>
+										<li><a href="#">Admin Tools</a></li>
+										<li role="separator" class="divider"></li>
+										<li><a href="j_spring_security_logout">Logout</a></li>
+									</ul></li>
+							</c:otherwise>
+						</c:choose>
 					</ul>
 				</div>
 				<!-- /.navbar-collapse -->
@@ -70,9 +78,9 @@
 			<!-- /.container-fluid -->
 		</nav>
 	</header>
-	<div class="container-fluid text-center">
+	<div class="container text-center">
 		<c:if test="${not empty tableName}">
-			<button name="createRec" type="button" class="btn btn-primary"
+			<button id="createRec" type="button" class="btn btn-primary"
 				data-toggle="modal" data-target="#editRec">
 				<span class="glyphicon glyphicon-plus-sign"></span> Create
 				${tableName}

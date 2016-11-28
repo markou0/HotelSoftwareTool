@@ -14,6 +14,11 @@ public class RoomBooking implements java.io.Serializable {
 	private Date from;
 	private Date to;
 	private double price;
+	private String roomTypeName;
+	private int roomCapacity;
+	private String roomNumber;
+	private String dateFrom;
+	private String dateTo;
 
 	public RoomBooking() {
 	}
@@ -73,6 +78,46 @@ public class RoomBooking implements java.io.Serializable {
 
 	public void setPrice(double price) {
 		this.price = price;
+	}
+
+	public String getRoomTypeName() {
+		return roomTypeName;
+	}
+
+	public int getRoomCapacity() {
+		return roomCapacity;
+	}
+
+	public String getRoomNumber() {
+		return roomNumber;
+	}
+
+	public String getDateFrom() {
+		return dateFrom;
+	}
+
+	public String getDateTo() {
+		return dateTo;
+	}
+
+	public void setRoomTypeName(String roomTypeName) {
+		this.roomTypeName = roomTypeName;
+	}
+
+	public void setRoomCapacity(int roomCapacity) {
+		this.roomCapacity = roomCapacity;
+	}
+
+	public void setRoomNumber(String roomNumber) {
+		this.roomNumber = roomNumber;
+	}
+
+	public void setDateFrom(String dateFrom) {
+		this.dateFrom = dateFrom;
+	}
+
+	public void setDateTo(String dateTo) {
+		this.dateTo = dateTo;
 	}
 
 }

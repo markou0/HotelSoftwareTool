@@ -51,4 +51,9 @@ public class RoomType implements java.io.Serializable {
 		this.rooms = rooms;
 	}
 
+	@Override
+	public String toString() {
+		return this.getName();
+	}
+
 }

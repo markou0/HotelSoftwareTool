@@ -48,6 +48,6 @@ td{
   overflow:hidden;
 }
 
-#data_ops{
+#data_ops, #createRec{
   margin-bottom: 2rem;
 }
