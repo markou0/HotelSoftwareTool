@@ -19,14 +19,11 @@ import com.markkryzh.hotel_software_tool.model.Room;
 import com.markkryzh.hotel_software_tool.model.RoomType;
 import com.markkryzh.hotel_software_tool.repository.RoomRepository;
 import com.markkryzh.hotel_software_tool.repository.RoomTypeRepository;
-import com.markkryzh.hotel_software_tool.repository.UserRepository;
 
 @Controller
 public class RoomController {
 
 	final String tableName = "room";
-	@Autowired
-	private UserRepository userRepository;
 	@Autowired
 	private RoomRepository roomRepository;
 	@Autowired
@@ -57,6 +54,7 @@ public class RoomController {
 	@RequestMapping(value = "/" + tableName + "/create", method = RequestMethod.POST)
 	public String createRoom(@ModelAttribute Room room) {
 		room.setRoomType(roomTypeRepository.findOneByName(room.getRoomTypeName()));
+		roomTypeRepository.findOneByName(room.getRoomTypeName());
 		roomRepository.save(room);
 		return "redirect:/" + tableName + "s";
 	}
@@ -72,21 +70,18 @@ public class RoomController {
 	public @ResponseBody String getRoomsByType(@RequestParam String roomTypeName) {
 		String result = "";
 		List<Room> rooms = roomRepository.findByRoomType(roomTypeRepository.findOneByName(roomTypeName));
-		if (rooms == null)
+		if (rooms == null || rooms.isEmpty())
 			return "";
 		int[] capacities = new int[rooms.size()];
 		for (int i = 0; i < rooms.size(); i++) {
 			capacities[i] = rooms.get(i).getCapacity();
 		}
 		Arrays.sort(capacities);
-		if (rooms.size() > 1)
-			for (int i = 1; i < rooms.size(); i++) {
-				int capacity = rooms.get(i).getCapacity();
-				if (capacity != rooms.get(i - 1).getCapacity())
-					result += "<option value='" + capacity + "'>" + capacity + "</option>";
-			}
-		else if (rooms.size() > 0)
-			result += "<option value='" + capacities[0] + "'>" + capacities[0] + "</option>";
+		result += "<option value='" + capacities[0] + "'>" + capacities[0] + "</option>";
+		for (int i = 1; i < capacities.length; i++) {
+			if (capacities[i] != capacities[i - 1])
+				result += "<option value='" + capacities[i] + "'>" + capacities[i] + "</option>";
+		}
 		return result;
 	}
 
@@ -103,17 +98,11 @@ public class RoomController {
 	}
 
 	@RequestMapping(value = "/checkBookingRoom", method = RequestMethod.GET, produces = { "text/html; charset=UTF-8" })
-	public @ResponseBody String getRoomsByCapacity(@RequestParam String roomNumber, @RequestParam String dateFrom,
+	public @ResponseBody String getCalcRoomBookingPrice(@RequestParam String roomNumber, @RequestParam String dateFrom,
 			@RequestParam String dateTo) throws ParseException {
 		LocalDate startDate = LocalDate.parse(dateFrom);
 		LocalDate endtDate = LocalDate.parse(dateTo);
-		// Range = End date - Start date
 		Long range = ChronoUnit.DAYS.between(startDate, endtDate);
-		System.out.println("Number of days between the start date : " + dateFrom + " and end date : " + endtDate
-				+ " is  ==> " + range);
-
-		range = ChronoUnit.DAYS.between(startDate, endtDate);
-		System.err.println(range);
 		double price = roomRepository.findOneByNumber(roomNumber).getPrice();
 		return range * price + "";
 	}

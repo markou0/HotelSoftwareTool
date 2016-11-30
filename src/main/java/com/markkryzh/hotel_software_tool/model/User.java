@@ -1,5 +1,5 @@
 package com.markkryzh.hotel_software_tool.model;
-// Generated 25 лист. 2016 3:50:37 by Hibernate Tools 5.2.0.Beta1
+// Generated 29 лист. 2016 21:45:31 by Hibernate Tools 5.2.0.Beta1
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,10 +9,9 @@ import java.util.Set;
  */
 public class User implements java.io.Serializable {
 
-	private Integer id;
+	private int id;
 	private String email;
 	private String password;
-	private String confPassword;
 	private String phone;
 	private String name;
 	private String surname;
@@ -24,7 +23,7 @@ public class User implements java.io.Serializable {
 	public User() {
 	}
 
-	public User(Integer id, String email, String password, String phone, String name, String surname, String role,
+	public User(int id, String email, String password, String phone, String name, String surname, String role,
 			short enabled) {
 		this.id = id;
 		this.email = email;
@@ -36,7 +35,7 @@ public class User implements java.io.Serializable {
 		this.enabled = enabled;
 	}
 
-	public User(Integer id, String email, String password, String phone, String name, String surname, String role,
+	public User(int id, String email, String password, String phone, String name, String surname, String role,
 			short enabled, Set roomBookings, Set serviceBookings) {
 		this.id = id;
 		this.email = email;
@@ -50,11 +49,11 @@ public class User implements java.io.Serializable {
 		this.serviceBookings = serviceBookings;
 	}
 
-	public Integer getId() {
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -128,14 +127,6 @@ public class User implements java.io.Serializable {
 
 	public void setServiceBookings(Set serviceBookings) {
 		this.serviceBookings = serviceBookings;
-	}
-
-	public String getConfPassword() {
-		return confPassword;
-	}
-
-	public void setConfPassword(String confPassword) {
-		this.confPassword = confPassword;
 	}
 
 }

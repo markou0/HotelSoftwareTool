@@ -11,7 +11,8 @@
 <html>
 <head>
 <title>Main</title>
-<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Language" content="ua">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -48,11 +49,16 @@
 				<div class="collapse navbar-collapse"
 					id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
-						<li class="active"><a href=""><span
-								class="glyphicon glyphicon-home"></span> <span class="sr-only">(current)</span></a></li>
-						<li><a href="rooms">Rooms</a></li>
-						<li><a href="services">Services</a></li>
-						<li><a href="roomBookings">Room Bookings</a></li>
+						<li value="home" class=""><a href=""><span
+								class="glyphicon glyphicon-home"></span> </a></li>
+						<li value="rooms" class=""><a href="rooms">Rooms</a></li>
+						<li value="services"><a href="services">Services</a></li>
+						<sec:authorize access="isAuthenticated()">
+							<li value="roomBookings"><a href="roomBookings">Room
+									Bookings</a></li>
+							<li value="serviceBookings"><a href="serviceBookings">Service
+									Bookings</a></li>
+						</sec:authorize>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<c:choose>
@@ -62,10 +68,9 @@
 							<c:otherwise>
 								<li class="dropdown"><a href="#" class="dropdown-toggle"
 									data-toggle="dropdown" role="button" aria-haspopup="true"
-									aria-expanded="false">${pageContext.request.userPrincipal.name}<span class="caret"></span></a>
+									aria-expanded="false">${pageContext.request.userPrincipal.name}<span
+										class="caret"></span></a>
 									<ul class="dropdown-menu">
-										<li><a href="#">My page</a></li>
-										<li><a href="#">Admin Tools</a></li>
 										<li role="separator" class="divider"></li>
 										<li><a href="j_spring_security_logout">Logout</a></li>
 									</ul></li>
@@ -77,13 +82,57 @@
 			</div>
 			<!-- /.container-fluid -->
 		</nav>
+		<script>
+		<c:choose>
+	    <c:when test="${not empty tableName}">
+	    $(document).ready(function() {
+			$("ul.navbar-nav li[value='<c:out value="${tableName}s"/>']").addClass("active");
+		})
+	    </c:when>
+	    <c:otherwise>
+	    <c:if test="${not empty content}">
+	    $(document).ready(function() {
+			$("ul.navbar-nav li[value='<c:out value="${content}"/>']").addClass("active");
+		})
+		 </c:if>
+	    </c:otherwise>
+		</c:choose>
+		
+		function validateRoomBookingForm() {
+			if($('input[name="dateTo"]').val()<=$('input[name="dateFrom"]').val()){
+				alert("Invalid date Range!");
+				return false;
+			}
+			return true;
+		}
+		</script>
 	</header>
 	<div class="container text-center">
-		<c:if test="${not empty tableName}">
-			<button id="createRec" type="button" class="btn btn-primary"
-				data-toggle="modal" data-target="#editRec">
-				<span class="glyphicon glyphicon-plus-sign"></span> Create
-				${tableName}
-			</button>
-			<jsp:include page="CRUID_Forms.jsp" flush="true" />
-		</c:if>
+		<c:choose>
+			<c:when test="${empty pageContext.request.userPrincipal}">
+				<h4 class="bg-warning">
+					Please login to order Room or Service</a>
+				</h4>
+			</c:when>
+		</c:choose>
+		<sec:authorize access="hasRole('CLIENT')">
+			<c:if
+				test="${tableName=='serviceBooking' || tableName=='roomBooking'}">
+				<button id="createRec" type="button" class="btn btn-primary"
+					data-toggle="modal" data-target="#editRec">
+					<span class="glyphicon glyphicon-plus-sign"></span> Create
+					${tableName}
+				</button>
+				<jsp:include page="CRUID_Forms.jsp" flush="true" />
+			</c:if>
+		</sec:authorize>
+		<sec:authorize access="hasRole('ADMIN')">
+			<c:if test="${not empty tableName}">
+				<button id="createRec" type="button" class="btn btn-primary"
+					data-toggle="modal" data-target="#editRec">
+					<span class="glyphicon glyphicon-plus-sign"></span> Create
+					${tableName}
+				</button>
+				<jsp:include page="CRUID_Forms.jsp" flush="true" />
+			</c:if>
+		</sec:authorize>

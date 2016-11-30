@@ -1,5 +1,5 @@
 package com.markkryzh.hotel_software_tool.model;
-// Generated 25 лист. 2016 3:50:37 by Hibernate Tools 5.2.0.Beta1
+// Generated 28 лист. 2016 23:15:44 by Hibernate Tools 5.2.0.Beta1
 
 import java.util.Date;
 
@@ -11,24 +11,19 @@ public class RoomBooking implements java.io.Serializable {
 	private int id;
 	private Room room;
 	private User user;
-	private Date from;
-	private Date to;
+	private Date fromDate;
+	private Date toDate;
 	private double price;
-	private String roomTypeName;
-	private int roomCapacity;
-	private String roomNumber;
-	private String dateFrom;
-	private String dateTo;
 
 	public RoomBooking() {
 	}
 
-	public RoomBooking(int id, Room room, User user, Date from, Date to, double price) {
+	public RoomBooking(int id, Room room, User user, Date fromDate, Date toDate, double price) {
 		this.id = id;
 		this.room = room;
 		this.user = user;
-		this.from = from;
-		this.to = to;
+		this.fromDate = fromDate;
+		this.toDate = toDate;
 		this.price = price;
 	}
 
@@ -56,20 +51,20 @@ public class RoomBooking implements java.io.Serializable {
 		this.user = user;
 	}
 
-	public Date getFrom() {
-		return this.from;
+	public Date getFromDate() {
+		return this.fromDate;
 	}
 
-	public void setFrom(Date from) {
-		this.from = from;
+	public void setFromDate(Date fromDate) {
+		this.fromDate = fromDate;
 	}
 
-	public Date getTo() {
-		return this.to;
+	public Date getToDate() {
+		return this.toDate;
 	}
 
-	public void setTo(Date to) {
-		this.to = to;
+	public void setToDate(Date toDate) {
+		this.toDate = toDate;
 	}
 
 	public double getPrice() {
@@ -78,46 +73,6 @@ public class RoomBooking implements java.io.Serializable {
 
 	public void setPrice(double price) {
 		this.price = price;
-	}
-
-	public String getRoomTypeName() {
-		return roomTypeName;
-	}
-
-	public int getRoomCapacity() {
-		return roomCapacity;
-	}
-
-	public String getRoomNumber() {
-		return roomNumber;
-	}
-
-	public String getDateFrom() {
-		return dateFrom;
-	}
-
-	public String getDateTo() {
-		return dateTo;
-	}
-
-	public void setRoomTypeName(String roomTypeName) {
-		this.roomTypeName = roomTypeName;
-	}
-
-	public void setRoomCapacity(int roomCapacity) {
-		this.roomCapacity = roomCapacity;
-	}
-
-	public void setRoomNumber(String roomNumber) {
-		this.roomNumber = roomNumber;
-	}
-
-	public void setDateFrom(String dateFrom) {
-		this.dateFrom = dateFrom;
-	}
-
-	public void setDateTo(String dateTo) {
-		this.dateTo = dateTo;
 	}
 
 }

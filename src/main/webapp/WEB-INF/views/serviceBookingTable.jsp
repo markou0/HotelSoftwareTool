@@ -8,24 +8,22 @@
 <%@page session="true"%>
 <div id="data_ops" class="btn-group"></div>
 <div class="panel panel-default">
-	<div class="panel-heading">Room Bookings</div>
+	<div class="panel-heading">Service Bookings</div>
 	<div class="table-responsive">
 		<table class="table table-bordered">
 			<thead>
 				<tr>
 					<th>Operations</th>
 					<th>ID</th>
-					<th>Room Type</th>
-					<th>Room Number</th>
-					<th>Room Capacity</th>
-					<th>From</th>
-					<th>To</th>
+					<th>Service Name</th>
+					<th>Date</th>
+					<th>Time</th>
 					<th>Price</th>
 					<th>User</th>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="roomBooking" items="${roomBookings}"
+				<c:forEach var="serviceBooking" items="${serviceBookings}"
 					varStatus="status">
 					<tr>
 							<td name="operations">
@@ -41,16 +39,15 @@
 									<span class="glyphicon glyphicon-edit"></span>
 								</button>
 							</td>
-						<td name="id"><c:out value="${roomBooking.id}"></c:out></td>
-						<td name="roomTypeName"><c:out
-								value="${roomBooking.room.roomType}"></c:out></td>
-						<td name="roomName"><c:out value="${roomBooking.room.number}"></c:out></td>
-						<td name="roomCapacity"><c:out
-								value="${roomBooking.room.capacity}"></c:out></td>
-						<td name="dateFrom"><c:out value="${roomBooking.fromDate}"></c:out></td>
-						<td name="dateTo"><c:out value="${roomBooking.toDate}"></c:out></td>
-						<td name="price"><c:out value="${roomBooking.price}"></c:out></td>
-						<td name="user"><c:out value="${roomBooking.user.email}"></c:out></td>
+
+						<td name="id"><c:out value="${serviceBooking.id}"></c:out></td>
+						<td name="serviceName"><c:out
+								value="${serviceBooking.service.name}"></c:out></td>
+						<td name="atDate"><c:out value="${serviceBooking.atDate}"></c:out></td>
+						<td name="atTime"><c:out value="${serviceBooking.atTime}"></c:out></td>
+						<td name="price"><c:out
+								value="${serviceBooking.service.price}"></c:out></td>
+						<td name="user"><c:out value="${serviceBooking.user.email}"></c:out></td>
 					</tr>
 				</c:forEach>
 			</tbody>

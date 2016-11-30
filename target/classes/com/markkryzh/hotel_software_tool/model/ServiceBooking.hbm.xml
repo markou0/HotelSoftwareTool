@@ -6,12 +6,12 @@
     <class name="com.markkryzh.hotel_software_tool.model.ServiceBooking" table="service_booking" schema="public" optimistic-lock="version">
         <id name="id" type="int">
             <column name="id" />
-            <generator class="assigned" />
+            <generator class="native" />
         </id>
-        <many-to-one name="service" class="com.markkryzh.hotel_software_tool.model.Service" fetch="select">
+        <many-to-one name="service" class="com.markkryzh.hotel_software_tool.model.Service" lazy="false" fetch="select">
             <column name="service_id" not-null="true" />
         </many-to-one>
-        <many-to-one name="user" class="com.markkryzh.hotel_software_tool.model.User" fetch="select">
+        <many-to-one name="user" class="com.markkryzh.hotel_software_tool.model.User" lazy="false" fetch="select">
             <column name="user_id" not-null="true" />
         </many-to-one>
         <property name="atDate" type="date">

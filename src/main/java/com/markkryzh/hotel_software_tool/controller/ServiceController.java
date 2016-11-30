@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.markkryzh.hotel_software_tool.model.Service;
 import com.markkryzh.hotel_software_tool.repository.ServiceRepository;
@@ -30,7 +31,7 @@ public class ServiceController {
 	}
 
 	@RequestMapping(value = "/" + tableName + "/edit", method = RequestMethod.POST)
-	public String editRoom(@ModelAttribute Service serviceForm) {
+	public String editService(@ModelAttribute Service serviceForm) {
 		Service service = serviceRepository.findOne(serviceForm.getId());
 		service.setDescription(serviceForm.getDescription());
 		service.setCapacity(serviceForm.getCapacity());
@@ -41,16 +42,23 @@ public class ServiceController {
 	}
 
 	@RequestMapping(value = "/" + tableName + "/create", method = RequestMethod.POST)
-	public String createRoom(@ModelAttribute Service service) {
+	public String createService(@ModelAttribute Service service) {
 		serviceRepository.save(service);
 		return "redirect:/" + tableName + "s";
 	}
 
 	@RequestMapping(value = "/" + tableName + "/remove", method = RequestMethod.POST)
-	public String deleteRoom(@RequestParam Integer id) {
+	public String deleteService(@RequestParam Integer id) {
 		if (serviceRepository.exists(id))
 			serviceRepository.delete(id);
 		return "redirect:/" + tableName + "s";
+	}
+
+	@RequestMapping(value = "servicePrice", method = RequestMethod.GET)
+	@ResponseBody
+	public String getServicePrice(@RequestParam String serviceName) {
+		serviceRepository.findOneByName(serviceName).getPrice();
+		return serviceRepository.findOneByName(serviceName).getPrice() + "";
 	}
 
 }

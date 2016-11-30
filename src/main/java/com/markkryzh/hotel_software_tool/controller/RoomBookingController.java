@@ -1,13 +1,15 @@
 package com.markkryzh.hotel_software_tool.controller;
 
+import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.markkryzh.hotel_software_tool.model.Room;
 import com.markkryzh.hotel_software_tool.model.RoomBooking;
 import com.markkryzh.hotel_software_tool.model.RoomType;
+import com.markkryzh.hotel_software_tool.model.User;
 import com.markkryzh.hotel_software_tool.repository.RoomBookingRepository;
 import com.markkryzh.hotel_software_tool.repository.RoomRepository;
 import com.markkryzh.hotel_software_tool.repository.RoomTypeRepository;
@@ -34,11 +37,19 @@ public class RoomBookingController {
 	private RoomBookingRepository roomBookingRepository;
 
 	@RequestMapping(value = "/" + tableName + "s", method = RequestMethod.GET)
-	public String template(Model model) {
+	public String template(Model model, Principal principal) {
+		User user = null;
 		List<RoomType> roomTypes = roomTypeRepository.findAll();
 		List<Room> rooms = roomRepository.findAll();
-		List<RoomBooking> roomBookings = roomBookingRepository.findAll();
-		model.addAttribute("roomsBookings", roomBookings);
+		List<RoomBooking> roomBookings;
+		if (principal == null)
+			return "template";
+		user = userRepository.findByEmail(principal.getName());
+		if (user.getRole().equals("ADMIN"))
+			roomBookings = roomBookingRepository.findAll();
+		else
+			roomBookings = roomBookingRepository.findByUser(user);
+		model.addAttribute("roomBookings", roomBookings);
 		model.addAttribute("roomTypes", roomTypes);
 		model.addAttribute("rooms", rooms);
 		model.addAttribute("tableName", tableName);
@@ -46,33 +57,45 @@ public class RoomBookingController {
 		return "template";
 	}
 
-	@RequestMapping(value = "/" + tableName + "/edit", method = RequestMethod.POST)
-	public String editRoom(@ModelAttribute Room roomForm) {
-		Room room = roomRepository.findOne(roomForm.getId());
-		room.setRoomType(roomTypeRepository.findOneByName(roomForm.getRoomTypeName()));
-		room.setCapacity(roomForm.getCapacity());
-		room.setPrice(roomForm.getPrice());
-		room.setNumber(roomForm.getNumber());
-		roomRepository.save(room);
+	@RequestMapping(value = "/" + tableName + "/create", method = RequestMethod.POST)
+	public String createRoomBooking(@RequestParam String roomNumber, @RequestParam String dateFrom,
+			@RequestParam String dateTo, Principal principal) throws ParseException {
+		RoomBooking roomBooking = new RoomBooking();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+		LocalDate startDate = LocalDate.parse(dateFrom);
+		LocalDate endtDate = LocalDate.parse(dateTo);
+		Long range = ChronoUnit.DAYS.between(startDate, endtDate);
+		double price = roomRepository.findOneByNumber(roomNumber).getPrice() * range;
+		roomBooking.setPrice(price);
+		roomBooking.setRoom(roomRepository.findOneByNumber(roomNumber));
+		roomBooking.setUser(userRepository.findByEmail(principal.getName()));
+		roomBooking.setFromDate(formatter.parse(dateFrom));
+		roomBooking.setToDate(formatter.parse(dateTo));
+		roomBookingRepository.save(roomBooking);
 		return "redirect:/" + tableName + "s";
 	}
 
-	@RequestMapping(value = "/" + tableName + "/create", method = RequestMethod.POST)
-	public String createRoom(@ModelAttribute RoomBooking roomBooking) throws ParseException {
-		roomBooking.setRoom(roomRepository.findOneByNumber(roomBooking.getRoomNumber()));
-		// roomBooking.setUser(userRepository.findByName(principal.getName()));
+	@RequestMapping(value = "/" + tableName + "/edit", method = RequestMethod.POST)
+	public String editRoomBooking(@RequestParam int id, @RequestParam String roomNumber, @RequestParam String dateFrom,
+			@RequestParam String dateTo, Principal principal) throws ParseException {
+		RoomBooking roomBooking = roomBookingRepository.findOne(id);
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
-		roomBooking.setFrom(formatter.parse(roomBooking.getDateFrom()));
-		roomBooking.setTo(formatter.parse(roomBooking.getDateTo()));
+		LocalDate startDate = LocalDate.parse(dateFrom);
+		LocalDate endtDate = LocalDate.parse(dateTo);
+		Long range = ChronoUnit.DAYS.between(startDate, endtDate);
+		double price = roomRepository.findOneByNumber(roomNumber).getPrice() * range;
+		roomBooking.setPrice(price);
+		roomBooking.setRoom(roomRepository.findOneByNumber(roomNumber));
+		roomBooking.setFromDate(formatter.parse(dateFrom));
+		roomBooking.setToDate(formatter.parse(dateTo));
 		roomBookingRepository.save(roomBooking);
 		return "redirect:/" + tableName + "s";
 	}
 
 	@RequestMapping(value = "/" + tableName + "/remove", method = RequestMethod.POST)
-	public String deleteRoom(@RequestParam Integer id) {
-		if (roomRepository.exists(id))
-			roomRepository.delete(id);
+	public String deleteRoomBooking(@RequestParam Integer id) {
+		if (roomBookingRepository.exists(id))
+			roomBookingRepository.delete(id);
 		return "redirect:/" + tableName + "s";
 	}
-
 }

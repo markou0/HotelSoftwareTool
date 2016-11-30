@@ -1,4 +1,4 @@
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!-- Modals -->
 <div class="modal fade" id="removeRec" role="dialog">
 	<div class="modal-dialog">
@@ -44,61 +44,156 @@
 	$(document)
 			.ready(
 					function() {
-						
-						$( 'select[name="roomTypeName"]').change(function(){
-							$('select[name="roomCapacity"] option').remove();
-					    });
-						
-						$( 'select[name="roomCapacity"]').change(function(){
-							$('select[name="roomNumber"] option').remove();
-					    });
-						
-						$( 'select[name="roomCapacity"]').change(function(){
-							
-					    });
-						
-						$( 'input[name="to"]').change(function(){
-							$.ajax({
-								url : 'checkBookingRoom',
-								data : ({
-									roomNumber: $('select[name="roomNumber"]').find(":selected").text() ,
-									dateTo: $( 'input[name="to"]').val(),
-									 dateFrom: $( 'input[name="from"]').val()
-								}),
-								success : function(data) {
-									$('input[name="price"]').prop('value',data);
-								}
-							});
-					    });
-						
-						$( 'select[name="roomCapacity"]').focus(function(){
-							$.ajax({
-								url : 'roomsByType',
-								data : ({
-									roomTypeName : $('select[name="roomTypeName"]').find(":selected").text()
-								}),
-								success : function(data) {
-									$('select[name="roomCapacity"] option').remove();
-									$('select[name="roomCapacity"]').html(data);
-								}
-							});
-					    });
-						
-						$( 'select[name="roomNumber"]').focus(function(){
-							$.ajax({
-								url : 'roomsByCapacity',
-								data : ({
-									roomCapacity : $('select[name="roomCapacity"]').find(":selected").text()
-								}),
-								success : function(data) {
-									$('select[name="roomNumber] option').remove();
-									$('select[name="roomNumber"]').html(data);
-								}
-							});
-							
-							
-					    });
-						
+						$("td[name='operations'] button").click(function(){
+							$('select[name="roomType"]').change();
+							$('select[name="serviceName"]').change();
+						})
+
+						$('select[name="serviceName"]')
+								.change(
+										function() {
+
+											$
+													.ajax({
+														url : 'servicePrice',
+														data : ({
+															serviceName : $(
+																	'select[name="serviceName"]')
+																	.find(
+																			":selected")
+																	.text()
+														}),
+														success : function(data) {
+
+															$(
+																	'input[name="price"]')
+																	.prop(
+																			'value',
+																			data);
+														}
+													});
+
+										});
+
+						$('select[name="roomTypeName"]')
+								.change(
+										function() {
+											$(
+													'select[name="roomCapacity"] option')
+													.prop("selected", false);
+											$(
+													'select[name="roomCapacity"] option')
+													.prop("hidden", true);
+											$(
+													'select[name="roomNumber"] option')
+													.prop("selected", false);
+											$(
+													'select[name="roomNumber"] option')
+													.prop("hidden", true);
+											$("[name='roomNumber']").prop(
+													'value', null);
+											$("[name='roomCapacity']").prop(
+													'value', null);
+											$('select[name="roomCapacity"]')
+													.find(
+															"option:not(:hidden):eq(0)");
+											$('select[name="roomNumber"]')
+													.find(
+															"option:not(:hidden):eq(0)");
+
+											$
+													.ajax({
+														url : 'roomsByType',
+														data : ({
+															roomTypeName : $(
+																	'select[name="roomTypeName"]')
+																	.find(
+																			":selected")
+																	.text()
+														}),
+														success : function(data) {
+
+															$(
+																	'select[name="roomCapacity"]')
+																	.html(data);
+															$(
+																	'select[name="roomCapacity"]')
+																	.change();
+														}
+													});
+
+										});
+						$('select[name="roomCapacity"]')
+								.change(
+
+										function() {
+											$
+													.ajax({
+														url : 'roomsByCapacity',
+														data : ({
+															roomCapacity : $(
+																	'select[name="roomCapacity"]')
+																	.find(
+																			":selected")
+																	.text()
+														}),
+														success : function(data) {
+
+															$(
+																	'select[name="roomNumber"]')
+																	.html(data);
+															$(
+																	'input[name="dateTo"]')
+																	.change();
+														}
+													});
+										});
+
+						$('select[name="roomCapacity"]').change(
+								function() {
+									$('select[name="roomNumber"] option').prop(
+											"selected", false);
+									$('select[name="roomNumber"] option').prop(
+											"hidden", true);
+								});
+
+						$('input[name="dateTo"]')
+								.change(
+										function() {
+											$
+													.ajax({
+														url : 'checkBookingRoom',
+														data : ({
+															roomNumber : $(
+																	'select[name="roomNumber"]')
+																	.find(
+																			":selected")
+																	.text(),
+															dateTo : $(
+																	'input[name="dateTo"]')
+																	.val(),
+															dateFrom : $(
+																	'input[name="dateFrom"]')
+																	.val()
+														}),
+														success : function(data) {
+															$(
+																	'input[name="price"]')
+																	.prop(
+																			'value',
+																			0);
+															if (data < 0)
+																alert("Invalid date Range!");
+															else
+																$(
+																		'input[name="price"]')
+																		.prop(
+																				'value',
+																				data);
+														}
+													});
+										});
+
 						$(
 								"button[data-target='#removeRec'],button[name='editRec']")
 								.click(function() {
@@ -170,6 +265,7 @@
 									$("#editRec button[type='Reset']").click();
 									$("#editRec h4.modal-title").html(
 											"Create ${tableName}");
+									$("select[name=serviceName]").change();
 								});
 
 						$("button[name='removeRec']")

@@ -11,8 +11,8 @@
 
 	<http use-expressions="true">
 
-<!-- 		<intercept-url pattern="/user" access="isAuthenticated()" />
-		<intercept-url pattern="/rooms" access="hasRole('ADMIN')" /> -->
+		<intercept-url pattern="/roomBookings" access="isAuthenticated()" />
+		<intercept-url pattern="/serviceBookings" access="isAuthenticated()" />
 
 		<form-login login-page='/login' 
 			default-target-url="/"
@@ -27,8 +27,8 @@
 	<authentication-manager>
 		<authentication-provider>
 			<user-service>
-				<user name="client" password="123456" authorities="CLIENT" />
-				<user name="admin" password="123456" authorities="ADMIN" />
+				<user name="client@mail.com" password="123456" authorities="CLIENT" />
+				<user name="admin@mail.com" password="123456" authorities="ADMIN" />
 			</user-service>
 		</authentication-provider>
 	</authentication-manager>
